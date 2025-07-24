@@ -1,0 +1,18 @@
+{
+  "manifest_version": 4,
+  "type": "extension",
+  "name": "ipc-logger-devtools",
+  "slug": "ipc_logger_devtools",
+  "description": "ipc_logger 调试打印工具",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "曦月",
+      "link": "https://github.com/xiyuesaves"
+    }
+  ],
+  "platform": ["win32", "linux", "darwin"],
+  "injects": {
+    "main": "./src/nobuild.js"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "./plugin.schema.json",
+  "name": "ipc-logger-devtools",
+  "main": "./src/main.js",
+  "description": "ipc_logger 调试打印工具",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "曦月",
+      "link": "https://github.com/xiyuesaves"
+    }
+  ],
+  "type": "module",
+  "qwqnt": {
+    "name": "ipc_logger 调试打印工具"
+  }
+}
