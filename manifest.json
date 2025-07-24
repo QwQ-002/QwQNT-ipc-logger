@@ -13,6 +13,6 @@
   ],
   "platform": ["win32", "linux", "darwin"],
   "injects": {
-    "main": "./src/nobuild.js"
+    "main": "./dist/main.js"
   }
 }
