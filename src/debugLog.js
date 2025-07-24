@@ -3,7 +3,7 @@ import { createServer as createHttpServer } from "http";
 import { createServer as creatNetServer } from "net";
 import superjson from "superjson";
 import clientJS from "../dist/client.js_raw";
-import clientHTML from "./debug.html"
+import clientHTML from "./debug.html";
 
 let cacheLogs = [];
 class Logs {
@@ -19,6 +19,7 @@ class Logs {
 class WebLog {
   constructor() {
     this.server = createHttpServer(this.httpHandel.bind(this));
+    this.port;
   }
   httpHandel(req, res) {
     // 处理日志请求
@@ -45,16 +46,18 @@ class WebLog {
   }
   start() {
     if (!this.server.listening) {
-      const port = (() => {
+      this.port = (() => {
         const server = creatNetServer();
         server.listen(0);
         const { port } = server.address();
         server.close();
         return port;
       })();
-      this.server.listen(port, () => {
-        shell.openExternal(`http://localhost:${port}/debug`);
+      this.server.listen(this.port, () => {
+        shell.openExternal(`http://localhost:${this.port}/debug`);
       });
+    } else {
+      shell.openExternal(`http://localhost:${this.port}/debug`);
     }
   }
   stop() {
