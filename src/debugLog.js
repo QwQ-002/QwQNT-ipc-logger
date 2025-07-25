@@ -5,7 +5,7 @@ import superjson from "superjson";
 import clientJS from "../dist/client.js_raw";
 import clientHTML from "./debug.html";
 
-let cacheLogs = [];
+global.cacheLogs = [];
 class Logs {
   constructor(logName) {
     this.logName = logName;
@@ -13,7 +13,7 @@ class Logs {
   }
   log(...args) {
     console.log(`[${this.logName}]`, ...args);
-    cacheLogs.push([`[${this.logName}]`, ...args]);
+    global.cacheLogs.push([`[${this.logName}]`, ...args]);
   }
 }
 class WebLog {
@@ -26,8 +26,8 @@ class WebLog {
     if (req.url === "/" && req.method === "GET") {
       // 读取日志文件内容
       res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
-      const log = superjson.stringify(cacheLogs);
-      cacheLogs = [];
+      const log = superjson.stringify(global.cacheLogs);
+      global.cacheLogs = [];
       res.end(log);
     } else if (req.url === "/debug" && req.method === "GET") {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Access-Control-Allow-Origin": "*" });
@@ -71,11 +71,11 @@ class WebLog {
 const webLog = new WebLog();
 
 function ipcSendLog(args) {
-  cacheLogs.push(["[send]", ...args]);
+  global.cacheLogs.push(["[send]", ...args]);
 }
 
 function ipcOnLog(args) {
-  cacheLogs.push(["[receive]", ...args]);
+  global.cacheLogs.push(["[receive]", ...args]);
 }
 
 export { Logs, webLog, ipcSendLog, ipcOnLog };
