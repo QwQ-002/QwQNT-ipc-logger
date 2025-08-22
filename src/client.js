@@ -33,7 +33,7 @@ console.log("通信端口", port);
               break;
             default:
               singLog[0] = `%c${singLog[0]}`;
-              singLog.splice(1, 0, "background:#ff0000;color:#000000D9;padding:2px 4px;border-radius: 4px;");
+              singLog.splice(1, 0, "background:#ffdc00;color:#000000D9;padding:2px 4px;border-radius: 4px;");
           }
           console.log(...singLog);
         }
