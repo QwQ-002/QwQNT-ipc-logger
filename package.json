@@ -1,8 +1,8 @@
 {
   "$schema": "./plugin.schema.json",
-  "name": "ipc-logger-devtools",
+  "name": "ipc_logger",
   "main": "./dist/main.js",
-  "description": "ipc通信调试打印工具",
+  "description": "ipc通信调试工具",
   "version": "0.0.1",
   "scripts": {
     "build": "node esbuild.config.mjs"
@@ -15,7 +15,7 @@
   ],
   "type": "commonjs",
   "qwqnt": {
-    "name": "ipc通信调试打印工具",
+    "name": "ipc通信调试工具",
     "dependencies": {
       "ipc_interceptor": "^0.0.1"
     }
