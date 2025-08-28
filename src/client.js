@@ -12,7 +12,7 @@ async function poll() {
     if (logs && logs.length) {
       for (let i = 0; i < logs.length; i++) {
         const log = logs[i];
-        if (log?.[4]?.[1]?.[0] === "info" || log?.[2]?.eventName === "ns-LoggerApi-2") {
+        if (log?.[log.length - 1]?.[0]?.eventName === "LogApi") {
           continue;
         }
         switch (log[0]) {
