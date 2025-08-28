@@ -1,4 +1,5 @@
 import { Logs, webLog, ipcSendLog, ipcOnLog } from "./debugLog.js";
+global.Logs = Logs;
 
 const log = new Logs("ipc_logger");
 log("已加载");
@@ -7,7 +8,6 @@ function onBrowserWindowCreated(window) {
   try {
     if (global.IpcInterceptor) {
       registerShortcut(window);
-      global.Logs = Logs;
       IpcInterceptor.onIpcSend(ipcSendLog);
       IpcInterceptor.onIpcReceive(ipcOnLog);
     } else {
