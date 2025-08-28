@@ -1,17 +1,21 @@
 import { Logs, webLog, ipcSendLog, ipcOnLog } from "./debugLog.js";
 
 const log = new Logs("ipc_logger");
-console.log("插件已加载");
+log("已加载");
 
 function onBrowserWindowCreated(window) {
   try {
-    registerShortcut(window);
-    proxyIpcMessage(window);
-    proxySend(window);
+    if (global.IpcInterceptor) {
+      registerShortcut(window);
+      global.Logs = Logs;
+      IpcInterceptor.onIpcSend(ipcSendLog);
+      IpcInterceptor.onIpcReceive(ipcOnLog);
+    } else {
+      throw new Error("未找到 IpcInterceptor，请安装前置插件 QWQNT-IpcInterceptor");
+    }
   } catch (err) {
     log("出现错误" + err.message);
   }
-  return window;
 }
 
 function registerShortcut(window) {
@@ -22,33 +26,8 @@ function registerShortcut(window) {
   });
 }
 
-function proxyIpcMessage(window) {
-  const ipc_message_proxy =
-    window.webContents._events["-ipc-message"]?.[0] || window.webContents._events["-ipc-message"];
-  const proxyIpcMsg = new Proxy(ipc_message_proxy, {
-    apply(target, thisArg, args) {
-      ipcOnLog(args);
-      return target.apply(thisArg, args);
-    },
-  });
-  if (window.webContents._events["-ipc-message"]?.[0]) {
-    window.webContents._events["-ipc-message"][0] = proxyIpcMsg;
-  } else {
-    window.webContents._events["-ipc-message"] = proxyIpcMsg;
-  }
-}
-
-function proxySend(window) {
-  // 复写并监听ipc通信内容
-  const originalSend = window.webContents.send;
-  window.webContents.send = (...args) => {
-    ipcSendLog(args);
-    originalSend.call(window.webContents, ...args);
-  };
-}
-
 if (global.qwqnt) {
-  qwqnt.main.hooks.whenBrowserWindowCreated.on(onBrowserWindowCreated);
+  qwqnt.main.hooks.whenBrowserWindowCreated.peek(onBrowserWindowCreated);
 }
 
 module.exports = { onBrowserWindowCreated };

@@ -15,7 +15,10 @@
   ],
   "type": "commonjs",
   "qwqnt": {
-    "name": "ipc通信调试打印工具"
+    "name": "ipc通信调试打印工具",
+    "dependencies": {
+      "ipc_interceptor": "^0.0.1"
+    }
   },
   "dependencies": {
     "esbuild": "^0.25.8",
