@@ -6,6 +6,8 @@ import clientJS from "../dist/client.js_raw";
 import clientHTML from "./debug.html";
 
 global.cacheLogs = [];
+let pendingResponses = [];
+
 class Logs {
   constructor(logName) {
     this.logName = logName;
@@ -13,22 +15,46 @@ class Logs {
   }
   log(...args) {
     console.log(`[${this.logName}]`, ...args);
-    global.cacheLogs.push([`[${this.logName}]`, ...args]);
+    pushLog([`[${this.logName}]`, ...args]);
   }
 }
+
+function pushLog(entry) {
+  global.cacheLogs.push(entry);
+  if (pendingResponses.length > 0) {
+    const log = superjson.stringify(global.cacheLogs);
+    global.cacheLogs = [];
+    for (const res of pendingResponses) {
+      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+      res.end(log);
+    }
+    pendingResponses = [];
+  }
+}
+
 class WebLog {
   constructor() {
     this.server = createHttpServer(this.httpHandel.bind(this));
     this.port;
   }
   httpHandel(req, res) {
-    // 处理日志请求
     if (req.url === "/" && req.method === "GET") {
-      // 读取日志文件内容
-      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
-      const log = superjson.stringify(global.cacheLogs);
-      global.cacheLogs = [];
-      res.end(log);
+      if (global.cacheLogs.length > 0) {
+        const log = superjson.stringify(global.cacheLogs);
+        global.cacheLogs = [];
+        res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+        res.end(log);
+      } else {
+        pendingResponses.push(res);
+        req.on("close", () => {
+          pendingResponses = pendingResponses.filter((r) => r !== res);
+        });
+        setTimeout(() => {
+          pendingResponses = pendingResponses.filter((r) => r !== res);
+          res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+          res.end("[]");
+        }, 30000);
+      }
     } else if (req.url === "/debug" && req.method === "GET") {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Access-Control-Allow-Origin": "*" });
       res.end(clientHTML);
@@ -39,7 +65,6 @@ class WebLog {
       });
       res.end(clientJS);
     } else {
-      // 处理其他请求
       res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
       res.end("Not Found");
     }
@@ -68,14 +93,15 @@ class WebLog {
     }
   }
 }
+
 const webLog = new WebLog();
 
 function ipcSendLog(args) {
-  global.cacheLogs.push(["[send]", ...args]);
+  pushLog(["[send]", ...args]);
 }
 
 function ipcOnLog(args) {
-  global.cacheLogs.push(["[receive]", ...args]);
+  pushLog(["[receive]", ...args]);
 }
 
 export { Logs, webLog, ipcSendLog, ipcOnLog };
