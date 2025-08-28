@@ -96,11 +96,11 @@ class WebLog {
 
 const webLog = new WebLog();
 
-function ipcSendLog(args) {
+function ipcSendLog(...args) {
   pushLog(["[send]", ...args]);
 }
 
-function ipcOnLog(args) {
+function ipcOnLog(...args) {
   pushLog(["[receive]", ...args]);
 }
 
