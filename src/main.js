@@ -4,15 +4,12 @@ global.Logs = Logs;
 const log = new Logs("ipc_logger");
 log("已加载");
 
+IpcInterceptor.onIpcSend(ipcSendLog);
+IpcInterceptor.onIpcReceive(ipcOnLog);
+
 function onBrowserWindowCreated(window) {
   try {
-    if (global.IpcInterceptor) {
-      registerShortcut(window);
-      IpcInterceptor.onIpcSend(ipcSendLog);
-      IpcInterceptor.onIpcReceive(ipcOnLog);
-    } else {
-      throw new Error("未找到 IpcInterceptor，请安装前置插件 QWQNT-IpcInterceptor");
-    }
+    registerShortcut(window);
   } catch (err) {
     log("出现错误" + err.message);
   }
