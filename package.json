@@ -3,7 +3,7 @@
   "name": "ipc_logger",
   "main": "./dist/main.js",
   "description": "ipc通信调试工具",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "node esbuild.config.mjs"
   },
@@ -17,7 +17,7 @@
   "qwqnt": {
     "name": "ipc通信调试工具",
     "dependencies": {
-      "ipc_interceptor": "^0.0.2"
+      "ipc_interceptor": "^1.0.0"
     }
   },
   "dependencies": {
