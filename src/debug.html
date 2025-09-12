@@ -1,14 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="data:image/ico;base64,aWNv" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>IPC logger</h1>
-    <h2>Press f12</h2>
-  </body>
-  <script src="/debug.js" type="module"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/ico;base64,aWNv" />
+  <title>Document</title>
+</head>
+
+<body>
+  <h1>IPC logger</h1>
+  <h2>Press f12</h2>
+  <fieldset>
+    <legend>Filter:</legend>
+    <div>
+      <input checked type="radio" id="All" name="filter" value="All" checked />
+      <label for="All">All</label>
+    </div>
+    <div>
+      <input type="radio" id="send" name="filter" value="send" />
+      <label for="send">send</label>
+    </div>
+    <div>
+      <input type="radio" id="receive" name="filter" value="receive" />
+      <label for="receive">receive</label>
+    </div>
+    <div>
+      <input type="radio" id="other" name="filter" value="other" />
+      <label for="other">other</label>
+    </div>
+  </fieldset>
+</body>
+<script src="/debug.js" type="module"></script>
+
 </html>
