@@ -50,9 +50,11 @@ class WebLog {
           pendingResponses = pendingResponses.filter((r) => r !== res);
         });
         setTimeout(() => {
-          pendingResponses = pendingResponses.filter((r) => r !== res);
-          res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
-          res.end("[]");
+          if (!res.writableEnded) {
+            pendingResponses = pendingResponses.filter((r) => r !== res);
+            res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+            res.end("[]");
+          }
         }, 30000);
       }
     } else if (req.url === "/debug" && req.method === "GET") {
