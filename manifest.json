@@ -4,7 +4,7 @@
   "name": "ipc-logger-devtools",
   "slug": "ipc_logger_devtools",
   "description": "ipc_logger 调试打印工具",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "authors": [
     {
       "name": "曦月",

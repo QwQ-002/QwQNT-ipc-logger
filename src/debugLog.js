@@ -66,6 +66,29 @@ class WebLog {
         "Access-Control-Allow-Origin": "*",
       });
       res.end(clientJS);
+    } else if (req.url === "/command" && req.method === "POST") {
+      let body = "";
+      req.on("data", (chunk) => {
+        body += chunk.toString();
+      });
+      req.on("end", () => {
+        const cmd = body.trim();
+        if (cmd) {
+          try {
+            const result = eval(cmd);
+            pushLog(["[command]", cmd, "=>", result]);
+          } catch (err) {
+            pushLog(["[command error]", cmd, "=>", err.message]);
+          }
+        } else {
+          pushLog(["[command error]", "Empty command"]);
+        }
+        res.writeHead(200, {
+          "Content-Type": "application/json; charset=utf-8",
+          "Access-Control-Allow-Origin": "*",
+        });
+        res.end();
+      });
     } else {
       res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
       res.end("Not Found");

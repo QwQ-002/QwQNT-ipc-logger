@@ -82,3 +82,27 @@ function initFilter() {
 }
 
 initFilter();
+
+function initCommand() {
+  const commandInput = document.querySelector("#command");
+  const commandButton = document.querySelector("#sendCommand");
+  commandButton.addEventListener("click", () => {
+    sendCommand(commandInput.value);
+    commandInput.value = "";
+  });
+  commandInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && event.ctrlKey) {
+      sendCommand(commandInput.value);
+      commandInput.value = "";
+    }
+  });
+}
+
+function sendCommand(command) {
+  fetch(`http://localhost:${port}/command`, {
+    method: "POST",
+    body: command,
+  });
+}
+
+initCommand();
